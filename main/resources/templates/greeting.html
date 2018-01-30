@@ -1,0 +1,118 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Getting Started: Handling Form Submission</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<h1>Form</h1>
+<form>
+    <p>Id: <input type="text" id="id" th:field="*{id}" /></p>
+    <p>Message: <input type="text" id="content" th:field="*{content}" /></p>
+    <p><button onclick="submitValues(event)" value="Submit">Submit</button>
+        <button onclick="redditValues(event)" value="Reddit">Reddit</button></p>
+</form>
+</body>
+</html>
+
+<script type="text/javascript">
+
+    function redditValues(event) {
+        /*event.preventDefault();
+        var poemDisplay = "";
+        var url = "https://api.pushshift.io/reddit/search?q=%22This%20kills%20the%22";
+        var obj;
+        fetch(url).then(function(value) {
+
+            return value.json()}).then(function (value) { console.log(value.data[0]) });*/
+
+        event.preventDefault();
+        var xmlhttp = new XMLHttpRequest();
+        var url = "https://api.pushshift.io/reddit/search?q=Einstein&limit=2";
+        var myArr;
+
+        xmlhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+
+                myArr = xmlhttp.getResponseHeader("expires");
+                //console.log(xmlhttp.getResponseHeader("expires"));
+                var parsed = JSON.parse(this.responseText);
+                console.log(parsed.data[1].body);
+                var parsed1 = JSON.stringify(this.responseText);
+
+                //myArr =JSON.stringify( this.responseText);
+                // myFunction(myArr);
+                var id = document.getElementById('id').value;
+                var content = document.getElementById('content').value;
+                var url1 = 'http://localhost:8080/querySearch';
+
+                var xmlhttp1 = new XMLHttpRequest();   // new HttpRequest instance
+                xmlhttp1.open("POST", url1, true);
+                xmlhttp1.setRequestHeader("Content-Type", "application/json");
+
+               xmlhttp1.send(JSON.stringify([{id:"65", content:"shaista"},{id:"45", content:"2pmRambo"}]));
+                //xmlhttp1.send({id:"45", content:"2pmRambo"});
+            }
+        };
+        xmlhttp.open("GET", url, true);
+        xmlhttp.send();
+        //console.log(obj);
+
+        //window.location.href = url;
+        /*console.log(fetch(url).then(function (value) { return value.json() }));
+        console.log(fetch(url).then(function (value) { return value.json() }));*/
+
+        /*var httpRequest = new XMLHttpRequest();
+        httpRequest.open('GET', url, true);
+        /!*httpRequest.responseType = 'Text';*!/
+        /!*httpRequest.setRequestHeader("Content-type", "application/json");
+
+        httpRequest.setRequestHeader("Access-Control-Allow-Origin", "*");
+        httpRequest.setRequestHeader("Access-Control-Allow-Header", "*");
+        httpRequest.setRequestHeader("Access-Control-Allow-Method", "GET")
+        httpRequest.onload = function (ev) { poemDisplay.textContent = httpRequest.response; };*!/
+        httpRequest.send();
+        console.log("hello"+httpRequest.responseText);*/
+
+    }
+
+    function submitValues(event) {
+        event.preventDefault();
+        var id = document.getElementById('id').value;
+        var content = document.getElementById('content').value;
+        var url = 'http://localhost:8080/greeting?id=' + id  + '&content=' + content;
+
+        var httpRequest = new XMLHttpRequest();
+        httpRequest.open('GET', url, true);
+        httpRequest.setRequestHeader("Content-type", "application/json");
+
+        httpRequest.send();
+    }
+   /* function submitValues(event) {
+        event.preventDefault();
+        var id = document.getElementById('id').value;
+        var content = document.getElementById('content').value;
+        var url = 'http://localhost:8080/querySearch';
+
+        var xmlhttp = new XMLHttpRequest();   // new HttpRequest instance
+        xmlhttp.open("POST", url, true);
+        xmlhttp.setRequestHeader("Content-Type", "application/json");
+        xmlhttp.send(JSON.stringify({id:"45", content:"2pmRambo"}));
+
+    }*/
+   /* function submitValues(event) {
+        event.preventDefault();
+        /!*var id = document.getElementById('id').value;
+        var content = document.getElementById('content').value;*!/
+        var url = 'http://localhost:8080/greeting';
+
+
+        var xmlhttp = new XMLHttpRequest();   // new HttpRequest instance
+        xmlhttp.open("POST", url, true);
+        xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        xmlhttp.send({id:45, content:"2pmRambo"});
+
+
+    }*/
+
+</script>

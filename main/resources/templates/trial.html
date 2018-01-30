@@ -1,0 +1,44 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Getting Started: Handling Form Submission</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<h1>Form</h1>
+<form>
+    <p>Id: <input type="text" id="id" th:field="*{id}" /></p>
+    <p>Message: <input type="text" id="content" th:field="*{content}" /></p>
+    <p><button onclick="submitValues(event)" value="Submit">Submit</button>
+        <button onclick="redditValues(event)" value="Reddit">Reddit</button></p>
+</form>
+</body>
+</html>
+
+<script type="text/javascript">
+    function redditValues(event) {
+        event.preventDefault();
+        var xmlhttp = new XMLHttpRequest();
+        var url = "https://api.pushshift.io/reddit/search?q=Einstein&limit=100";
+        var myArr;
+
+        xmlhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                myArr = xmlhttp.getResponseHeader("expires");
+                //console.log(xmlhttp.getResponseHeader("expires"));
+                console.log(this.responseText);
+                //myArr =JSON.stringify( this.responseText);
+                // myFunction(myArr);
+            }
+        };
+
+        xmlhttp.open("GET", url, true);
+       xmlhttp.send();
+        //myArr = this.responseText;
+        myArr = xmlhttp.responseText;
+       // console.log(xmlhttp.getResponseHeader("expires"));
+        console.log(myArr);
+
+    }
+
+    </script>
