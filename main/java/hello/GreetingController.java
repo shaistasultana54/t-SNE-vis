@@ -4,6 +4,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicLong;
 
 import opennlp.tools.sentdetect.SentenceDetectorME;
@@ -44,12 +46,12 @@ public class GreetingController {
         String message = content;
         String message1 = "%22";
         String[] splitValues = message.split(" ");
-        for(int i = 0; i < splitValues.length - 1; i++){
+        for (int i = 0; i < splitValues.length - 1; i++) {
             message1 = message1 + splitValues[i] + "%20";
         }
         message1 = message1 + splitValues[splitValues.length - 1] + "%22";
 
-        String urlTemplate = "https://api.pushshift.io/reddit/search?q="+message1;
+        String urlTemplate = "https://api.pushshift.io/reddit/search?q=" + message1;
         String result = restTemplate.getForObject(urlTemplate, String.class);
         System.out.println(result);
         return "i am shaista";
@@ -57,7 +59,7 @@ public class GreetingController {
 
     @CrossOrigin
     @PostMapping("/querySearch")
-    public String querySearching(@RequestBody Greeting[] greeting){
+    public String querySearching(@RequestBody Greeting[] greeting) {
         System.out.println(greeting[0].getId());
         System.out.println(greeting[0].getContent());
         return greeting[0].getId();
@@ -66,10 +68,10 @@ public class GreetingController {
     @CrossOrigin
     @PostMapping("/redditSearch")
     public String redditSearching(@RequestBody RedditData[] redditData) throws IOException {
-        ArrayList<ArrayList<String>> tokenizedData = new ArrayList<>();
+        ArrayList<ArrayList<String>> tokenizedData = new ArrayList<ArrayList<String>>();
         ArrayList<String> arrayOfBody = new ArrayList<String>();
-        for(int i = 0; i < redditData.length; i++){
-            arrayOfBody.add(redditData[i].body.replaceAll("http.*?\\s", "").toLowerCase().replaceAll("\\d",""));
+        for (int i = 0; i < redditData.length; i++) {
+            arrayOfBody.add(redditData[i].body.replaceAll("http.*?\\s", "").toLowerCase().replaceAll("\\d", ""));
            /* //Loading the Tokenizer model
             InputStream inputStream = new FileInputStream("E:/tokenizing/en-token.bin");
             TokenizerModel tokenModel = new TokenizerModel(inputStream);
@@ -85,11 +87,15 @@ public class GreetingController {
             ArrayList<String> tokensWithRemovedStopWords = stopWords.removeStopword(tokens);
             tokenizedData.add(tokensWithRemovedStopWords);
             for (int k = 0; k < tokensWithRemovedStopWords.size(); k++) {
-
                 System.out.println(tokensWithRemovedStopWords.get(k));
             }
         }
-
+        TreeSet<String> uniqueWords = new TreeSet<>();
+        for (int i = 0; i < tokenizedData.size(); i++){
+            for (int j = 0; j < tokenizedData.get(i).size(); j++){
+                uniqueWords.add(tokenizedData.get(i).get(j));
+            }
+        }
 
         return "shaista";
     }
