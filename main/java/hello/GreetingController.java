@@ -83,15 +83,18 @@ public class GreetingController {
         }
         double[][] matrixForTsne = new double[uniqueWords.size()][tokenizedData.size()];
         String[] uniqueWordsArray = uniqueWords.toArray(new String[uniqueWords.size()]);
-        int count[] = new int[tokenizedData.size()];
-        for(int comment = 0; comment < tokenizedData.size(); comment++){
-            for(int token = 0; token < tokenizedData.get(comment).size(); token++ ){
-                if(uniqueWordsArray[0].equals(tokenizedData.get(comment).get(token))){
-                    count[comment]++ ;
+        int count = 0;
+        for (int wordCount = 0; wordCount < uniqueWordsArray.length; ++wordCount){
+            for (int comment = 0; comment < tokenizedData.size(); comment++) {
+                for (int token = 0; token < tokenizedData.get(comment).size(); token++) {
+                    if (uniqueWordsArray[wordCount].equals(tokenizedData.get(comment).get(token))) {
+                        count++;
+                    }
                 }
+                matrixForTsne[wordCount][comment] = count;
+                count = 0;
             }
-            matrixForTsne[0][comment] = count[comment];
-        }
+    }
 
         return "shaista";
     }
