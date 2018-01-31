@@ -9,6 +9,8 @@ import java.util.HashSet;
 import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicLong;
 
+import com.jujutsu.tsne.FastTSne;
+import com.jujutsu.tsne.TSne;
 import opennlp.tools.sentdetect.SentenceDetectorME;
 import opennlp.tools.tokenize.SimpleTokenizer;
 import opennlp.tools.tokenize.TokenizerME;
@@ -59,7 +61,7 @@ public class GreetingController {
     @PostMapping("/redditSearch")
     public String redditSearching(@RequestBody RedditData[] redditData) throws IOException {
         ArrayList<ArrayList<String>> tokenizedData = new ArrayList<>();
-        ArrayList<String> arrayOfBody = new ArrayList<String>();
+        ArrayList<String> arrayOfBody = new ArrayList<>();
         for (int i = 0; i < redditData.length; i++) {
             arrayOfBody.add(redditData[i].body.replaceAll("http.*?\\s", "")
                     .toLowerCase().replaceAll("\\d", ""));
@@ -78,13 +80,13 @@ public class GreetingController {
         for (ArrayList<String> aTokenizedData : tokenizedData) {
             uniqueWords.addAll(aTokenizedData);
         }
-        for (String s : uniqueWords) {
+        /*for (String s : uniqueWords) {
             System.out.println(s);
-        }
+        }*/
         double[][] matrixForTsne = new double[uniqueWords.size()][tokenizedData.size()];
         String[] uniqueWordsArray = uniqueWords.toArray(new String[uniqueWords.size()]);
         int count = 0;
-        for (int wordCount = 0; wordCount < uniqueWordsArray.length; ++wordCount){
+        for (int wordCount = 0; wordCount < uniqueWordsArray.length; ++wordCount) {
             for (int comment = 0; comment < tokenizedData.size(); comment++) {
                 for (int token = 0; token < tokenizedData.get(comment).size(); token++) {
                     if (uniqueWordsArray[wordCount].equals(tokenizedData.get(comment).get(token))) {
@@ -94,7 +96,25 @@ public class GreetingController {
                 matrixForTsne[wordCount][comment] = count;
                 count = 0;
             }
-    }
+        }
+        /*for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 5; j++) {
+                System.out.println(matrixForTsne[i][j]);
+            }
+        }*/
+        System.out.println(uniqueWordsArray.length);
+        TSne tsne = new FastTSne();
+        double perplexity = 20.0;
+        int initial_dims = 50;
+        int iters = 1000;
+        double [][] Y = tsne.tsne(matrixForTsne, 2, initial_dims, perplexity, iters);
+
+        System.out.println("t-sne is completed now!");
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 2; j++) {
+                System.out.println(Y[i][j]);
+            }
+        }
 
         return "shaista";
     }
