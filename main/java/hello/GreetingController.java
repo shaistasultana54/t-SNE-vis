@@ -3,6 +3,7 @@ package hello;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.TreeSet;
@@ -24,17 +25,6 @@ public class GreetingController {
 
     private static final String template = "Hello, %s!";
     private final AtomicLong counter = new AtomicLong();
-
-    /*@RequestMapping("/greeting")
-    public Greeting greeting(@RequestParam(value="name", defaultValue="World") String name) {
-        return new Greeting(counter.incrementAndGet(),
-                            String.format(template, name));
-    }*/
-  /*  @GetMapping("/greeting")
-    public String greetingForm(Model model) {
-        model.addAttribute("greeting", new Greeting(0, "hey"));
-        return "greeting";
-    }*/
 
     @CrossOrigin
     @GetMapping("/greeting")
@@ -68,17 +58,11 @@ public class GreetingController {
     @CrossOrigin
     @PostMapping("/redditSearch")
     public String redditSearching(@RequestBody RedditData[] redditData) throws IOException {
-        ArrayList<ArrayList<String>> tokenizedData = new ArrayList<ArrayList<String>>();
+        ArrayList<ArrayList<String>> tokenizedData = new ArrayList<>();
         ArrayList<String> arrayOfBody = new ArrayList<String>();
         for (int i = 0; i < redditData.length; i++) {
-            arrayOfBody.add(redditData[i].body.replaceAll("http.*?\\s", "").toLowerCase().replaceAll("\\d", ""));
-           /* //Loading the Tokenizer model
-            InputStream inputStream = new FileInputStream("E:/tokenizing/en-token.bin");
-            TokenizerModel tokenModel = new TokenizerModel(inputStream);
-
-            //Instantiating the TokenizerME class
-            TokenizerME tokenizer = new TokenizerME(tokenModel);*/
-
+            arrayOfBody.add(redditData[i].body.replaceAll("http.*?\\s", "")
+                    .toLowerCase().replaceAll("\\d", ""));
             SimpleTokenizer tokenizer = SimpleTokenizer.INSTANCE;
 
             //Tokenizing the given raw text
@@ -86,15 +70,27 @@ public class GreetingController {
             StopWords stopWords = new StopWords();
             ArrayList<String> tokensWithRemovedStopWords = stopWords.removeStopword(tokens);
             tokenizedData.add(tokensWithRemovedStopWords);
-            for (int k = 0; k < tokensWithRemovedStopWords.size(); k++) {
-                System.out.println(tokensWithRemovedStopWords.get(k));
-            }
+            /*for (String tokensWithRemovedStopWord : tokensWithRemovedStopWords) {
+                System.out.println(tokensWithRemovedStopWord);
+            }*/
         }
         TreeSet<String> uniqueWords = new TreeSet<>();
-        for (int i = 0; i < tokenizedData.size(); i++){
-            for (int j = 0; j < tokenizedData.get(i).size(); j++){
-                uniqueWords.add(tokenizedData.get(i).get(j));
+        for (ArrayList<String> aTokenizedData : tokenizedData) {
+            uniqueWords.addAll(aTokenizedData);
+        }
+        for (String s : uniqueWords) {
+            System.out.println(s);
+        }
+        double[][] matrixForTsne = new double[uniqueWords.size()][tokenizedData.size()];
+        String[] uniqueWordsArray = uniqueWords.toArray(new String[uniqueWords.size()]);
+        int count[] = new int[tokenizedData.size()];
+        for(int comment = 0; comment < tokenizedData.size(); comment++){
+            for(int token = 0; token < tokenizedData.get(comment).size(); token++ ){
+                if(uniqueWordsArray[0].equals(tokenizedData.get(comment).get(token))){
+                    count[comment]++ ;
+                }
             }
+            matrixForTsne[0][comment] = count[comment];
         }
 
         return "shaista";

@@ -1,14 +1,12 @@
 package hello;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Iterator;
 
 public class StopWords {
-    public HashSet<String> stopWords;
+    private HashSet<String> stopWords;
 
-    public StopWords() {
+    StopWords() {
         this.stopWords = new HashSet();
         stopWords.add("!!");
         stopWords.add("?!");
@@ -158,59 +156,13 @@ public class StopWords {
         stopWords.add("upon");
         stopWords.add("of");
         stopWords.add("no");
+        stopWords.add("lmao");
+        stopWords.add("yep");
         stopWords.add("www");
         stopWords.add("me");
         stopWords.add("not");
         stopWords.add("on");
         stopWords.add("oh");
-        /*stopWords.add()
-        stopWords.add()
-        stopWords.add()
-        stopWords.add()
-        stopWords.add()
-        stopWords.add()
-        stopWords.add()
-        stopWords.add()
-        stopWords.add()
-        stopWords.add()
-        stopWords.add()
-        stopWords.add()
-        stopWords.add()
-        stopWords.add()
-        stopWords.add()
-        stopWords.add()
-        stopWords.add()
-        stopWords.add()
-        stopWords.add()
-        stopWords.add()
-        stopWords.add()
-        stopWords.add()
-        stopWords.add()
-        stopWords.add()
-        stopWords.add()
-        stopWords.add()
-        stopWords.add()
-        stopWords.add()
-        stopWords.add()
-        stopWords.add()
-        stopWords.add()
-        stopWords.add()
-        stopWords.add()
-        stopWords.add()
-        stopWords.add()
-        stopWords.add()
-        stopWords.add()
-        stopWords.add()
-        stopWords.add()
-        stopWords.add()
-        stopWords.add()
-        stopWords.add()
-        stopWords.add()
-        stopWords.add()
-        stopWords.add()
-        stopWords.add()
-        stopWords.add()
-        stopWords.add()*/
 
     }
 
