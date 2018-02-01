@@ -36,12 +36,16 @@
                         body: parsed.data[j].body
                     });
                 }
-                console.log(parsed);
-                console.log(parsed.data[0].body);
+                /*console.log(parsed);
+                console.log(parsed.data[0].body);*/
                 var content = document.getElementById('content').value;
                 var url1 = 'http://localhost:8080/redditSearch';
 
                 var xmlhttp1 = new XMLHttpRequest();   // new HttpRequest instance
+                xmlhttp1.onreadystatechange = function () {
+                    var res = this.responseText;
+                    console.log(res);
+                }
                 xmlhttp1.open("POST", url1, true);
                 xmlhttp1.setRequestHeader("Content-Type", "application/json");
 

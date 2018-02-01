@@ -59,7 +59,7 @@ public class GreetingController {
 
     @CrossOrigin
     @PostMapping("/redditSearch")
-    public String redditSearching(@RequestBody RedditData[] redditData) throws IOException {
+    public double[][] redditSearching(@RequestBody RedditData[] redditData) throws IOException {
         ArrayList<ArrayList<String>> tokenizedData = new ArrayList<>();
         ArrayList<String> arrayOfBody = new ArrayList<>();
         for (int i = 0; i < redditData.length; i++) {
@@ -110,12 +110,32 @@ public class GreetingController {
         double [][] Y = tsne.tsne(matrixForTsne, 2, initial_dims, perplexity, iters);
 
         System.out.println("t-sne is completed now!");
-        for (int i = 0; i < 5; i++) {
+        /*for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 2; j++) {
                 System.out.println(Y[i][j]);
             }
-        }
+        }*/
 
-        return "shaista";
+        System.out.println("array rows:"+ Y.length);
+        System.out.println("array column:"+ Y[0].length);
+        double smallest = Y[0][0];
+        for (int i = 0; i < Y.length; i ++){
+            for (int j = 0; j < Y[i].length; j++){
+                if (Y[i][j] < smallest){
+                   smallest = Y[i][j];
+                }
+            }
+        }
+        System.out.println(smallest);
+        double largest = Y[0][0];
+        for (int i = 0; i < Y.length; i ++){
+            for (int j = 0; j < Y[i].length; j++){
+                if (Y[i][j] > smallest){
+                    largest = Y[i][j];
+                }
+            }
+        }
+        System.out.println(largest);
+        return Y;
     }
 }
