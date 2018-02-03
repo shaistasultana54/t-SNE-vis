@@ -97,10 +97,8 @@ public class GreetingController {
                 count = 0;
             }
         }
-        /*double[][] matrixForTsne = new double[tokenizedData.size()][uniqueWords.size()];
-        String[] uniqueWordsArray = uniqueWords.toArray(new String[uniqueWords.size()]);
-        int count = 0;
-        for (int wordCount = 0; wordCount < uniqueWordsArray.length; ++wordCount) {
+
+        /*for (int wordCount = 0; wordCount < uniqueWordsArray.length; ++wordCount) {
             for (int comment = 0; comment < tokenizedData.size(); comment++) {
                 for (int token = 0; token < tokenizedData.get(comment).size(); token++) {
                     if (uniqueWordsArray[wordCount].equals(tokenizedData.get(comment).get(token))) {
@@ -110,7 +108,15 @@ public class GreetingController {
                 matrixForTsne[comment][wordCount] = count;
                 count = 0;
             }
-        }
+        }*/
+        /*double[][] matrixForTsne = new double[100][12550];
+        for(int i = 0; i < 100; i++){
+            for(int j = 0; j <12550; j++ ){
+                matrixForTsne[i][j] = Math.random();
+            }
+        }*/
+
+        /*
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 5; j++) {
                 System.out.println(matrixForTsne[i][j]);
