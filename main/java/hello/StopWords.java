@@ -75,7 +75,7 @@ public class StopWords {
         stopWords.add("being");
         stopWords.add("can");
         stopWords.add("could");
-        stopWords.add("the");
+        //stopWords.add("the");
         stopWords.add("did");
         stopWords.add("do");
         stopWords.add("don");

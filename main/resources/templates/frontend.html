@@ -2,14 +2,17 @@
 <html lang="en">
 <head>
     <title>Getting Started: Handling Form Submission</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <script type="text/javascript" src="https://d3js.org/d3.v4.min.js"></script>
 </head>
 <body>
 <h1>Form</h1>
 <form>
 
-    <p>Message: <input type="text" id="content" /></p>
-    <p><button onclick="submitValues(event)" value="Submit">Submit</button></p>
+    <p>Message: <input type="text" id="content"/></p>
+    <p>
+        <button onclick="submitValues(event)" value="Submit">Submit</button>
+    </p>
 </form>
 </body>
 </html>
@@ -17,21 +20,31 @@
 
     function submitValues(event) {
         event.preventDefault();
+        var data = [[5,3], [10,17], [15,4], [2,8]];
+        var svgContainer = d3.select("body").append("svg")
+            .attr("width", 1000)
+            .attr("height", 1000);
+
+        //Draw the Circle
+        var circle = svgContainer.append("circle")
+            .attr("cx", 300)
+            .attr("cy", 300)
+            .attr("r", 20);
         var text = document.getElementById("content").value;
         var message1;
-        message1= "%22";
+        message1 = "%22";
         var splitValues = text.split(" ");
-        for(var i = 0; i < splitValues.length - 1; i++){
+        for (var i = 0; i < splitValues.length - 1; i++) {
             message1 = message1 + splitValues[i] + "%20";
         }
         message1 = message1 + splitValues[splitValues.length - 1] + "%22";
         var xmlhttp = new XMLHttpRequest();
-        var url = "https://api.pushshift.io/reddit/search?q="+message1;
+        var url = "https://api.pushshift.io/reddit/search?q=" + message1;
         xmlhttp.onreadystatechange = function () {
             if (this.readyState == 4 && this.status == 200) {
                 var parsed = JSON.parse(this.responseText);
                 var arrayToPass = [];
-                for(var j = 0; j < parsed.data.length; j++){
+                for (var j = 0; j < parsed.data.length; j++) {
                     arrayToPass.push({
                         body: parsed.data[j].body
                     });
@@ -44,7 +57,12 @@
                 var xmlhttp1 = new XMLHttpRequest();   // new HttpRequest instance
                 xmlhttp1.onreadystatechange = function () {
                     var res = this.responseText;
-                    console.log(res);
+                    //var dimensions = [ res.length, res[0].length ];
+                    //console.log(typeof eval(res));
+                    var arr = JSON.parse("[" + res + "]");
+
+                    console.log(arr);
+                    visualization(arr);
                 }
                 xmlhttp1.open("POST", url1, true);
                 xmlhttp1.setRequestHeader("Content-Type", "application/json");
@@ -54,5 +72,76 @@
         };
         xmlhttp.open("GET", url, true);
         xmlhttp.send();
+    }
+
+    function visualization(res) {
+        console.log("data is");
+        var result = [];
+        for (var i = 0 ; i < res[0].length; i++) {
+            result[i] = [];
+            for (var j = 0; j < 1; j++) {
+                result[i][j] = res[i][j];
+            }
+        }
+        console.log(res[0][0]);
+        console.log(result[0][0])
+        var data = [res[0][0], res[0][1], res[0][2], res[0][3]];
+       // var data = [[5,3], [-10,-17], [-15,-4], [2,8]];
+
+        var margin = {top: 20, right: 15, bottom: 60, left: 60}
+            , width = 960 - margin.left - margin.right
+            , height = 500 - margin.top - margin.bottom;
+
+        var x = d3.scaleLinear()
+            .domain([d3.min(data, function(d) { return d[0]; }), d3.max(data, function (d) {return d[0];})
+            ])
+            .range([0, width]);
+
+        var y = d3.scaleLinear()
+            .domain([d3.min(data, function(d) { return d[1]; }), d3.max(data, function (d) {return d[1];})
+            ])
+            .range([height, 0]);
+
+        var chart = d3.select('body')
+            .append('svg:svg')
+            .attr('width', width + margin.right + margin.left)
+            .attr('height', height + margin.top + margin.bottom)
+            .attr('class', 'chart');
+
+        var main = chart.append('g')
+            .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
+            .attr('width', width)
+            .attr('height', height)
+            .attr('class', 'main')
+
+// draw the x axis
+        var xAxis = d3.axisBottom(x);
+
+        main.append('g')
+            .attr('transform', 'translate(0,' + height + ')')
+            .attr('class', 'main axis date')
+            .call(xAxis);
+
+// draw the y axis
+        var yAxis = d3.axisLeft(y);
+
+        main.append('g')
+            .attr('transform', 'translate(0,0)')
+            .attr('class', 'main axis date')
+            .call(yAxis);
+
+        var g = main.append("svg:g");
+
+        g.selectAll("scatter-dots")
+            .data(data)
+            .enter().append("svg:circle")
+            .attr("cx", function (d, i) {
+                return x(d[0]);
+            })
+            .attr("cy", function (d) {
+                return y(d[1]);
+            })
+            .attr("r", 8);
+
     }
 </script>

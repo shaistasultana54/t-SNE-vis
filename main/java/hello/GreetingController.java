@@ -97,12 +97,26 @@ public class GreetingController {
                 count = 0;
             }
         }
-        /*for (int i = 0; i < 5; i++) {
+        /*double[][] matrixForTsne = new double[tokenizedData.size()][uniqueWords.size()];
+        String[] uniqueWordsArray = uniqueWords.toArray(new String[uniqueWords.size()]);
+        int count = 0;
+        for (int wordCount = 0; wordCount < uniqueWordsArray.length; ++wordCount) {
+            for (int comment = 0; comment < tokenizedData.size(); comment++) {
+                for (int token = 0; token < tokenizedData.get(comment).size(); token++) {
+                    if (uniqueWordsArray[wordCount].equals(tokenizedData.get(comment).get(token))) {
+                        count++;
+                    }
+                }
+                matrixForTsne[comment][wordCount] = count;
+                count = 0;
+            }
+        }
+        for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 5; j++) {
                 System.out.println(matrixForTsne[i][j]);
             }
-        }*/
-        System.out.println(uniqueWordsArray.length);
+        }
+        System.out.println(uniqueWordsArray.length);*/
         TSne tsne = new FastTSne();
         double perplexity = 20.0;
         int initial_dims = 50;
@@ -116,7 +130,7 @@ public class GreetingController {
             }
         }*/
 
-        System.out.println("array rows:"+ Y.length);
+        /*System.out.println("array rows:"+ Y.length);
         System.out.println("array column:"+ Y[0].length);
         double smallest = Y[0][0];
         for (int i = 0; i < Y.length; i ++){
@@ -134,8 +148,8 @@ public class GreetingController {
                     largest = Y[i][j];
                 }
             }
-        }
-        System.out.println(largest);
+        }*/
+       // System.out.println(largest);
         return Y;
     }
 }
