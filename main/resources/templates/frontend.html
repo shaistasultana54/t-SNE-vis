@@ -58,7 +58,7 @@
                 xmlhttp1.onreadystatechange = function () {
                     var res = this.responseText;
                     //var dimensions = [ res.length, res[0].length ];
-                    //console.log(typeof eval(res));
+                    console.log(res);
                     var arr = JSON.parse("[" + res + "]");
 
                     console.log(arr);
@@ -76,17 +76,34 @@
 
     function visualization(res) {
         console.log("data is");
-        var result = [];
+        /*var result = [];
         for (var i = 0 ; i < res[0].length; i++) {
             result[i] = [];
             for (var j = 0; j < 1; j++) {
                 result[i][j] = res[i][j];
             }
+        }*/
+        console.log(res[0][55]);
+        console.log(res[0][1]);
+        //console.log(res[0][500]);
+
+        var data = [];
+        console.log(data.length);
+        for(var a =0; a< res[0].length; a++)
+        {
+            data.push(res[0][a]);
         }
-        console.log(res[0][0]);
-        console.log(result[0][0])
-        var data = [res[0][0], res[0][1], res[0][2], res[0][3]];
-       // var data = [[5,3], [-10,-17], [-15,-4], [2,8]];
+        console.log(data.length);
+
+       //
+       //  var data = [res[0][0], res[0][1], res[0][2], res[0][res[0].length]];
+       //  console.log(data.length);
+       //  data.push(res[0][0]);
+       //  data.push(res[0][1]);
+       //  console.log(data.length);
+       //  console.log("the type is");
+       //  console.log(typeof data);
+       // // var data = [[5,3], [-10,-17], [-15,-4], [2,8]];
 
         var margin = {top: 20, right: 15, bottom: 60, left: 60}
             , width = 960 - margin.left - margin.right
