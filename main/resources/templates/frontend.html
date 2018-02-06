@@ -20,26 +20,20 @@
 
     function submitValues(event) {
         event.preventDefault();
-        var data = [[5,3], [10,17], [15,4], [2,8]];
-        var svgContainer = d3.select("body").append("svg")
-            .attr("width", 1000)
-            .attr("height", 1000);
-
-        //Draw the Circle
-        var circle = svgContainer.append("circle")
-            .attr("cx", 300)
-            .attr("cy", 300)
-            .attr("r", 20);
+        // var data = [[5,3], [10,17], [15,4], [2,8]];
         var text = document.getElementById("content").value;
         var message1;
-        message1 = "%22";
+        //message1 = "%22";
+        message1 = "";
         var splitValues = text.split(" ");
         for (var i = 0; i < splitValues.length - 1; i++) {
             message1 = message1 + splitValues[i] + "%20";
         }
-        message1 = message1 + splitValues[splitValues.length - 1] + "%22";
+        // message1 = message1 + splitValues[splitValues.length - 1] +"%26" +"limit" + "%3D" + "100"+ "%22";
+        message1 = message1 + splitValues[splitValues.length - 1];
         var xmlhttp = new XMLHttpRequest();
-        var url = "https://api.pushshift.io/reddit/search?q=" + message1;
+        //var url = "https://api.pushshift.io/reddit/search?q=" + message1 + "%22" ;
+        var url = "https://api.pushshift.io/reddit/search?q=" + message1 + "&limit=100";
         xmlhttp.onreadystatechange = function () {
             if (this.readyState == 4 && this.status == 200) {
                 var parsed = JSON.parse(this.responseText);
@@ -49,9 +43,11 @@
                         body: parsed.data[j].body
                     });
                 }
+                console.log("rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
+                console.log(parsed);
                 /*console.log(parsed);
                 console.log(parsed.data[0].body);*/
-                var content = document.getElementById('content').value;
+                //var content = document.getElementById('content').value;
                 var url1 = 'http://localhost:8080/redditSearch';
 
                 var xmlhttp1 = new XMLHttpRequest();   // new HttpRequest instance
@@ -63,10 +59,9 @@
 
                     console.log(arr);
                     visualization(arr);
-                }
+                };
                 xmlhttp1.open("POST", url1, true);
                 xmlhttp1.setRequestHeader("Content-Type", "application/json");
-
                 xmlhttp1.send(JSON.stringify(arrayToPass));
             }
         };
@@ -89,33 +84,40 @@
 
         var data = [];
         console.log(data.length);
-        for(var a =0; a< res[0].length; a++)
-        {
+        for (var a = 0; a < res[0].length; a++) {
             data.push(res[0][a]);
         }
         console.log(data.length);
 
-       //
-       //  var data = [res[0][0], res[0][1], res[0][2], res[0][res[0].length]];
-       //  console.log(data.length);
-       //  data.push(res[0][0]);
-       //  data.push(res[0][1]);
-       //  console.log(data.length);
-       //  console.log("the type is");
-       //  console.log(typeof data);
-       // // var data = [[5,3], [-10,-17], [-15,-4], [2,8]];
+        //
+        //  var data = [res[0][0], res[0][1], res[0][2], res[0][res[0].length]];
+        //  console.log(data.length);
+        //  data.push(res[0][0]);
+        //  data.push(res[0][1]);
+        //  console.log(data.length);
+        //  console.log("the type is");
+        //  console.log(typeof data);
+        // // var data = [[5,3], [-10,-17], [-15,-4], [2,8]];
 
         var margin = {top: 20, right: 15, bottom: 60, left: 60}
             , width = 960 - margin.left - margin.right
             , height = 500 - margin.top - margin.bottom;
 
         var x = d3.scaleLinear()
-            .domain([d3.min(data, function(d) { return d[0]; }), d3.max(data, function (d) {return d[0];})
+            .domain([d3.min(data, function (d) {
+                return d[0];
+            }), d3.max(data, function (d) {
+                return d[0];
+            })
             ])
             .range([0, width]);
 
         var y = d3.scaleLinear()
-            .domain([d3.min(data, function(d) { return d[1]; }), d3.max(data, function (d) {return d[1];})
+            .domain([d3.min(data, function (d) {
+                return d[1];
+            }), d3.max(data, function (d) {
+                return d[1];
+            })
             ])
             .range([height, 0]);
 

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Getting Started: Handling Form Submission</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <script type="text/javascript" src="https://d3js.org/d3.v4.min.js"></script>
+</head>
+<body>
+<h1>Form</h1>
+<form>
+
+    <p>Message: <input type="text" id="content"/></p>
+    <p>
+        <button onclick="submitValues(event)" value="Submit">Submit</button>
+    </p>
+</form>
+</body>
+</html>
+<script type="text/javascript">
+    function submitValues(event) {
+        event.preventDefault();
+        var text = document.getElementById("content").value;
+        var message1;
+        message1 = "";
+        var splitValues = text.split(" ");
+        for (var i = 0; i < splitValues.length - 1; i++) {
+            message1 = message1 + splitValues[i] + "%20";
+        }
+        // message1 = message1 + splitValues[splitValues.length - 1] +"%26" +"limit" + "%3D" + "100"+ "%22";
+        message1 = message1 + splitValues[splitValues.length - 1];
+        var xmlhttp = new XMLHttpRequest();
+        var url = "https://api.pushshift.io/reddit/search?q=" + message1 + "&limit=100" ;
+        console.log(url);
+        xmlhttp.onreadystatechange = function () {
+            if (this.readyState == XMLHttpRequest.DONE && this.status == 200) {
+                var parsed = JSON.parse(this.responseText);
+                var arrayToPass = [];
+                for (var j = 0; j < parsed.data.length; j++) {
+                    arrayToPass.push({
+                        body: parsed.data[j].body
+                    });
+                }
+                console.log("rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
+                console.log(parsed);
+                /*console.log(parsed);
+                console.log(parsed.data[0].body);*/
+                var content = document.getElementById('content').value;
+                }
+            };
+        xmlhttp.open("GET", url, true);
+        xmlhttp.send();
+    }
+    </script>

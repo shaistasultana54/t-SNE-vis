@@ -83,7 +83,7 @@ public class GreetingController {
         /*for (String s : uniqueWords) {
             System.out.println(s);
         }*/
-        double[][] matrixForTsne = new double[uniqueWords.size()][tokenizedData.size()];
+        double[][] matrixForTsne = new double[tokenizedData.size()][uniqueWords.size()];
         String[] uniqueWordsArray = uniqueWords.toArray(new String[uniqueWords.size()]);
         int count = 0;
         for (int wordCount = 0; wordCount < uniqueWordsArray.length; ++wordCount) {
@@ -93,7 +93,7 @@ public class GreetingController {
                         count++;
                     }
                 }
-                matrixForTsne[wordCount][comment] = count;
+                matrixForTsne[comment][wordCount] = count;
                 count = 0;
             }
         }
@@ -126,7 +126,7 @@ public class GreetingController {
         TSne tsne = new FastTSne();
         double perplexity = 20.0;
         int initial_dims = 50;
-        int iters = 1000;
+        int iters = 100;
         double [][] Y = tsne.tsne(matrixForTsne, 2, initial_dims, perplexity, iters);
 
         System.out.println("t-sne is completed now!");
