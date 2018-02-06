@@ -60,11 +60,14 @@ public class GreetingController {
     @CrossOrigin
     @PostMapping("/redditSearch")
     public double[][] redditSearching(@RequestBody RedditData[] redditData) throws IOException {
+
+        //list of comments which is a list of tokens
         ArrayList<ArrayList<String>> tokenizedData = new ArrayList<>();
         ArrayList<String> arrayOfBody = new ArrayList<>();
         for (int i = 0; i < redditData.length; i++) {
             arrayOfBody.add(redditData[i].body.replaceAll("http.*?\\s", "")
                     .toLowerCase().replaceAll("\\d", ""));
+            //use of OpenNLP
             SimpleTokenizer tokenizer = SimpleTokenizer.INSTANCE;
 
             //Tokenizing the given raw text
@@ -72,17 +75,15 @@ public class GreetingController {
             StopWords stopWords = new StopWords();
             ArrayList<String> tokensWithRemovedStopWords = stopWords.removeStopword(tokens);
             tokenizedData.add(tokensWithRemovedStopWords);
-            /*for (String tokensWithRemovedStopWord : tokensWithRemovedStopWords) {
-                System.out.println(tokensWithRemovedStopWord);
-            }*/
         }
+        //identify the unique words in the comments
         TreeSet<String> uniqueWords = new TreeSet<>();
         for (ArrayList<String> aTokenizedData : tokenizedData) {
             uniqueWords.addAll(aTokenizedData);
         }
-        /*for (String s : uniqueWords) {
-            System.out.println(s);
-        }*/
+        /*creation of 2-d array which can be used for input to TSNE
+        tokenizedData.size() gives the number of comments
+        */
         double[][] matrixForTsne = new double[tokenizedData.size()][uniqueWords.size()];
         String[] uniqueWordsArray = uniqueWords.toArray(new String[uniqueWords.size()]);
         int count = 0;
@@ -97,65 +98,13 @@ public class GreetingController {
                 count = 0;
             }
         }
-
-        /*for (int wordCount = 0; wordCount < uniqueWordsArray.length; ++wordCount) {
-            for (int comment = 0; comment < tokenizedData.size(); comment++) {
-                for (int token = 0; token < tokenizedData.get(comment).size(); token++) {
-                    if (uniqueWordsArray[wordCount].equals(tokenizedData.get(comment).get(token))) {
-                        count++;
-                    }
-                }
-                matrixForTsne[comment][wordCount] = count;
-                count = 0;
-            }
-        }*/
-        /*double[][] matrixForTsne = new double[100][12550];
-        for(int i = 0; i < 100; i++){
-            for(int j = 0; j <12550; j++ ){
-                matrixForTsne[i][j] = Math.random();
-            }
-        }*/
-
-        /*
-        for (int i = 0; i < 5; i++) {
-            for (int j = 0; j < 5; j++) {
-                System.out.println(matrixForTsne[i][j]);
-            }
-        }
-        System.out.println(uniqueWordsArray.length);*/
         TSne tsne = new FastTSne();
-        double perplexity = 20.0;
+        double perplexity = 10.0;
         int initial_dims = 50;
-        int iters = 100;
-        double [][] Y = tsne.tsne(matrixForTsne, 2, initial_dims, perplexity, iters);
+        int iters = 1000;
+        double[][] Y = tsne.tsne(matrixForTsne, 2, initial_dims, perplexity, iters);
 
         System.out.println("t-sne is completed now!");
-        /*for (int i = 0; i < 5; i++) {
-            for (int j = 0; j < 2; j++) {
-                System.out.println(Y[i][j]);
-            }
-        }*/
-
-        /*System.out.println("array rows:"+ Y.length);
-        System.out.println("array column:"+ Y[0].length);
-        double smallest = Y[0][0];
-        for (int i = 0; i < Y.length; i ++){
-            for (int j = 0; j < Y[i].length; j++){
-                if (Y[i][j] < smallest){
-                   smallest = Y[i][j];
-                }
-            }
-        }
-        System.out.println(smallest);
-        double largest = Y[0][0];
-        for (int i = 0; i < Y.length; i ++){
-            for (int j = 0; j < Y[i].length; j++){
-                if (Y[i][j] > smallest){
-                    largest = Y[i][j];
-                }
-            }
-        }*/
-       // System.out.println(largest);
         return Y;
     }
 }
