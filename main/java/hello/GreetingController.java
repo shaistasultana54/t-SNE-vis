@@ -1,20 +1,14 @@
 package hello;
 
-import java.io.FileInputStream;
+
 import java.io.IOException;
-import java.io.InputStream;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicLong;
 
 import com.jujutsu.tsne.FastTSne;
 import com.jujutsu.tsne.TSne;
-import opennlp.tools.sentdetect.SentenceDetectorME;
 import opennlp.tools.tokenize.SimpleTokenizer;
-import opennlp.tools.tokenize.TokenizerME;
-import opennlp.tools.tokenize.TokenizerModel;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
@@ -99,7 +93,7 @@ public class GreetingController {
             }
         }
         TSne tsne = new FastTSne();
-        double perplexity = 10.0;
+        double perplexity = 6.0;
         int initial_dims = 50;
         int iters = 1000;
         double[][] Y = tsne.tsne(matrixForTsne, 2, initial_dims, perplexity, iters);

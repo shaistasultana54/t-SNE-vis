@@ -47,7 +47,8 @@
                 xmlhttp1.onreadystatechange = function () {
                     if (this.readyState == 4 && this.status == 200){
                     var res = this.responseText;
-                    console.log(res);
+                    console.log("pass it for visualization")
+                    console.log(arrayToPass);
                     var arr = JSON.parse("[" + res + "]");
 
                     console.log(arr);
@@ -66,30 +67,24 @@
     function visualization(res) {
 
         var data = [];
-        console.log(data.length);
         for (var a = 0; a < res[0].length; a++) {
             data.push(res[0][a]);
         }
-        console.log(data.length);
         var margin = {top: 20, right: 15, bottom: 60, left: 60}
             , width = 960 - margin.left - margin.right
             , height = 500 - margin.top - margin.bottom;
 
         var x = d3.scaleLinear()
-            .domain([d3.min(data, function (d) {
-                return d[0];
-            }), d3.max(data, function (d) {
-                return d[0];
-            })
+            .domain([
+                d3.min(data, function (d) {return d[0];}),
+                d3.max(data, function (d) {return d[0];})
             ])
             .range([0, width]);
 
+
         var y = d3.scaleLinear()
-            .domain([d3.min(data, function (d) {
-                return d[1];
-            }), d3.max(data, function (d) {
-                return d[1];
-            })
+            .domain([d3.min(data, function (d) {return d[1];}),
+                d3.max(data, function (d) {return d[1];})
             ])
             .range([height, 0]);
 
@@ -97,20 +92,17 @@
             .append('svg:svg')
             .attr('width', width + margin.right + margin.left)
             .attr('height', height + margin.top + margin.bottom)
-            .attr('class', 'chart');
 
         var main = chart.append('g')
             .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
             .attr('width', width)
             .attr('height', height)
-            .attr('class', 'main')
 
 // draw the x axis
         var xAxis = d3.axisBottom(x);
 
         main.append('g')
             .attr('transform', 'translate(0,' + height + ')')
-            .attr('class', 'main axis date')
             .call(xAxis);
 
 // draw the y axis
@@ -118,7 +110,6 @@
 
         main.append('g')
             .attr('transform', 'translate(0,0)')
-            .attr('class', 'main axis date')
             .call(yAxis);
 
         var g = main.append("svg:g");
@@ -126,13 +117,20 @@
         g.selectAll("scatter-dots")
             .data(data)
             .enter().append("svg:circle")
-            .attr("cx", function (d, i) {
-                return x(d[0]);
-            })
-            .attr("cy", function (d) {
-                return y(d[1]);
-            })
-            .attr("r", 4);
+            .attr("cx", function (d, i) {return x(d[0]);})
+            .attr("cy", function (d) {return y(d[1]);})
+            .attr("r", 4)
+       var text =  g.selectAll("text")
+            .data(data)
+            .enter()
+            .append("text")
+        var textLabels = text
+                        .attr("x", function(d) { return x(d[0]); })
+                        .attr("y", function(d) { return y(d[1]); })
+                        .text( function (d, i) { return "( " + "C " + i +" )"; })
+                        .attr("font-family", "sans-serif")
+                        .attr("font-size", "10px")
+                        .attr("fill", "red");
 
     }
 </script>
